@@ -1,0 +1,9 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "python.pythonPath": "${workspaceRoot}/oxfordenv/bin/python",
+
+    "python.linting.enabled": false,
+    "python.linting.pylintEnabled": false,
+    "python.linting.pylintPath": "/Users/lucasbatagliao/codes/oxford_capes/oxfordenv/bin/pylint",
+    "python.formatting.provider": "autopep8"
+}
