@@ -122,9 +122,9 @@ def getPrograms(eduAssociation):
         p = areaobject.Program()
         p.name = text
         p.link = link
-        eduAssociation.programs.append(p)
+        programs.append(p)
 
-    return eduAssociation.programs
+    return programs
 
 
 def getCourses(program: areaobject.Program):
@@ -150,8 +150,17 @@ def getCourses(program: areaobject.Program):
    level = getcontainervalue(levelcontainer)
 
    ies = sections[1].getparent().xpath("//h2")
+   
    for ie in ies[:-1]:
        iename = ie.getchildren()[0].text
+
+       #verifica se o nome já foi adicionado
+       if(any(rc.name == iename for rc in resultcourses)):
+           continue
+        
+       if(any(rc.intituition == iename for rc in resultcourses)):
+           continue
+
        cepcontainer = ie.getnext()
        cep = getcontainervalue(cepcontainer)
        
@@ -196,10 +205,10 @@ def getCourses(program: areaobject.Program):
        c.phone = tel
        c.email = emailprogram
        c.url = url
+       resultcourses.append(c)
 
-   
+   return resultcourses
     
-
 
 def getcontainervalue(container):
     valcontainer = container.getchildren()[1]
@@ -223,5 +232,5 @@ if(__name__ == "__main__"):
                 programs = getPrograms(assoc)
 
                 for program in programs:
-                    program = getCourses(program)
+                    courses = getCourses(program)
 
