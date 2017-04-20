@@ -21,6 +21,11 @@ def getCourses(program: areaobject.Program):
 
    course = sections[2].getnext()
    coursename = course.getchildren()[0].text
+   
+   #remover o parenteses
+   lastindex = coursename.rfind('(')
+   if(lastindex > -1):
+       coursename = coursename[lastindex-1:]
 
    coursecodcontainer = course.getnext()
    coursecod = getcontainervalue(coursecodcontainer)
@@ -81,9 +86,9 @@ def getCourses(program: areaobject.Program):
        c.city = municipio
        c.zipcode: cep
        c.caixapostal = ""
-       c.phone = tel
-       c.email = emailprogram
-       c.url = url
+       c.phone = "" if tel is None else tel.strip()
+       c.email =  "" if emailprogram is None else emailprogram.strip()
+       c.url = "" if url is None else url.strip()
        resultcourses.append(c)
 
    return resultcourses

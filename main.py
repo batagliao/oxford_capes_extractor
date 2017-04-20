@@ -13,10 +13,12 @@ def writetofile(evarea, a, association, program, c):
     filename = "{}_{}.csv".format(FILTER_AREA.lower(), FILTER_EVALUATIONAREA.lower())
     with open(filename, 'a', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow([evarea.name, "CIÊNCIAS DA SAÚDE",
-                        a.name, c.intituition, None, program.name, c.name, c.code, c.level,
-                        a.name, c.logradouro, c.bairro, c.city, c.zipcode, c.caixapostal,
-                        c.phone, c.email, c.url])
+        writer.writerow([evarea.name.strip(), "CIÊNCIAS DA SAÚDE",
+                        a.name.strip(), c.intituition.strip(), None, program.name.strip(), 
+                        c.name.strip(), c.code.strip(), c.level.strip(),
+                        a.name.strip(), c.logradouro.strip(), c.bairro.strip(), 
+                        c.city.strip(), c.zipcode.strip(), c.caixapostal.strip(),
+                        c.phone.strip(), c.email.strip(), c.url.strip()])
 
 def writeheader():
     filename = "{}_{}.csv".format(FILTER_AREA.lower(),
