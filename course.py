@@ -98,7 +98,14 @@ def getCourses(program: areaobject.Program):
        c.caixapostal = ""
        c.phone = xstr(tel)
        c.email = xstr(emailprogram)
-       c.url = xstr(url)
+       c.url = xstr(url)       
+
+       if("ESTADUAL" in c.intituition):
+           c.adminDependency = "Estadual"
+
+       if("FEDERAL" in c.intituition):
+           c.adminDependency = "Federal"
+
        resultcourses.append(c)
 
    return resultcourses

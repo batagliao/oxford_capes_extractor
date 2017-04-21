@@ -15,7 +15,7 @@ def writetofile(evarea, a, association, program, c):
     with open(filename, 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow([evarea.name.strip(), "CIÊNCIAS DA SAÚDE",
-                        a.name.strip(), c.intituition.strip(), None, program.name.strip(), 
+                         a.name.strip(), c.intituition.strip(), c.adminDependency, program.name.strip(),
                         c.name.strip(), c.code.strip(), c.level.strip(),
                         a.name.strip(), c.logradouro.strip(), c.bairro.strip(), 
                         c.city.strip(), c.zipcode.strip(), c.caixapostal.strip(),
