@@ -12,6 +12,8 @@ def getEducationalAssociation(area):
     anchors = tree.xpath(
         "//table[@class='listagem tablesorter publico']/tbody/tr/td/a")
 
+    associations = list()
+
     ies = list()
     for a in anchors:
         text = a.text
@@ -19,6 +21,6 @@ def getEducationalAssociation(area):
         ea = areaobject.EducationalAssociation()
         ea.name = text
         ea.link = link
-        area.eduAssociations.append(ea)
+        associations.append(ea)
 
-    return area.eduAssociations
+    return associations

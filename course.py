@@ -84,7 +84,7 @@ def getCourses(program: areaobject.Program):
        url = getcontainervalue(urlcontainer)
 
        c = areaobject.Course()
-       c.name = coursename
+       c.name = xstr(coursename)
        c.intituition = iename
        c.adminDependency = ""
        c.code = coursecod
@@ -92,9 +92,9 @@ def getCourses(program: areaobject.Program):
        c.logradouro = xstr(logradouro) + " " + \
            xstr(complemento) + " " + xstr(numero)
        c.logradouro = c.logradouro.replace('\n', ' ').replace('\r', '')
-       c.bairro = bairro
-       c.city = municipio
-       c.zipcode = cep
+       c.bairro = xstr(bairro)
+       c.city = xstr(municipio)
+       c.zipcode = xstr(cep)
        c.caixapostal = ""
        c.phone = xstr(tel)
        c.email = xstr(emailprogram)

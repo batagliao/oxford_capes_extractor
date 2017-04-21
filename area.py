@@ -26,6 +26,8 @@ def getArea(evaluationArea):
     anchors = tree.xpath(
         "//table[@class='listagem tablesorter publico']/tbody/tr/td/a")
 
+    resultareas = list()
+
     for a in anchors:
         text = a.text
         link = a.get("href")
@@ -45,6 +47,6 @@ def getArea(evaluationArea):
         area = areaobject.Area()
         area.name = text
         area.link = link
-        evaluationArea.areas.append(area)
+        resultareas.append(area)
 
-    return evaluationArea.areas
+    return resultareas

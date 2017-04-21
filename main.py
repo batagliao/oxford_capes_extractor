@@ -11,7 +11,7 @@ import csv
 from openpyxl import Workbook
 
 def writetofile(evarea, a, association, program, c):
-    filename = "{}_{}.csv".format(FILTER_AREA.lower(), FILTER_EVALUATIONAREA.lower())
+    filename = getfilename(EXTENSION_CSV)
     with open(filename, 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow([evarea.name.strip(), "CIÊNCIAS DA SAÚDE",
@@ -22,8 +22,8 @@ def writetofile(evarea, a, association, program, c):
                         c.phone.strip(), c.email.strip(), c.url.strip()])
 
 def writeheader():
-    filename = "{}_{}.csv".format(FILTER_AREA.lower(),
-                                         FILTER_EVALUATIONAREA.lower())
+    filename = getfilename(EXTENSION_CSV)
+
     with open(filename, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(["Área de avaliação", "Grande área",
@@ -49,18 +49,35 @@ def writeheader_excel(ws):
                         "Telefone", "E-mail", "URL"])   
 
 def save_excel(wb):
-    filename= "{}_{}.xlsx".format(FILTER_AREA.lower(),
-                                  FILTER_EVALUATIONAREA.lower())
+    filename = getfilename(EXTENSION_EXCEL)
     wb.save(filename)
+
+def getfilename(extension):
+    if(FILTER_EVALUATIONAREA == None):
+        filename = "resultado.{}".format(extension)
+    elif (FILTER_AREA == None):
+        filename = "{}.{}".format(FILTER_EVALUATIONAREA.lower(), extension)
+    else:
+        filename = "{}_{}.{}".format(FILTER_AREA.lower(),
+                                       FILTER_EVALUATIONAREA.lower(), extension)
+    filename = filename.replace("/", "")
+    return filename
 
 if(__name__ == "__main__"):
 
-    if(len(sys.argv) < 3):
-        print("Necessário passar parâmetros de filtro de área e subárea")
-        exit(1)
+    # if(len(sys.argv) < 3):
+    #    print("Necessário passar parâmetros de filtro de área e subárea")
+    #     exit(1)
 
-    FILTER_EVALUATIONAREA = sys.argv[1].upper()
-    FILTER_AREA = sys.argv[2].upper()
+    EXTENSION_EXCEL = "xslx"
+    EXTENSION_CSV = "csv"
+    FILTER_EVALUATIONAREA = None
+    FILTER_AREA = None
+
+    if(len(sys.argv) >= 2):
+        FILTER_EVALUATIONAREA = sys.argv[1].upper()
+    if(len(sys.argv) >= 3):
+        FILTER_AREA = sys.argv[2].upper()
 
     #excel
     wb=Workbook(write_only = True)
@@ -71,11 +88,19 @@ if(__name__ == "__main__"):
 
     evaluationAreas = evaluationarea.getEvaluationAreas()
 
-    for evArea in [a for a in evaluationAreas if a.name == FILTER_EVALUATIONAREA ]:
+    filtered_evaluationareas = evaluationAreas
+    if(FILTER_EVALUATIONAREA != None):
+        filtered_evaluationareas = [a for a in evaluationAreas if a.name == FILTER_EVALUATIONAREA]
+    
+    for evArea in filtered_evaluationareas:
         areas = area.getArea(evArea)
 
-        for area in [a for a in areas if a.name == FILTER_AREA]:
-            associations = educationalassociation.getEducationalAssociation(area)
+        filtered_areas = areas
+        if FILTER_AREA != None:
+            filtered_areas = [a for a in areas if a.name == FILTER_AREA]
+
+        for a in filtered_areas:
+            associations = educationalassociation.getEducationalAssociation(a)
 
             for assoc in associations:
                 programs = program.getPrograms(assoc)
@@ -85,8 +110,8 @@ if(__name__ == "__main__"):
                     courses = course.getCourses(prog)
 
                     for c in courses:
-                        writetofile(evArea, area, assoc, prog, c)
-                        writetofile_excel(evArea, area, assoc, prog, c, ws)
+                        writetofile(evArea, a, assoc, prog, c)
+                        writetofile_excel(evArea, a, assoc, prog, c, ws)
                     
     save_excel(wb)
 
