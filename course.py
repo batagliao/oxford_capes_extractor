@@ -97,7 +97,7 @@ def getCourses(program: areaobject.Program):
        c.zipcode = cep
        c.caixapostal = ""
        c.phone = xstr(tel)
-       c.email =  xstr(email)
+       c.email = xstr(emailprogram)
        c.url = xstr(url)
        resultcourses.append(c)
 

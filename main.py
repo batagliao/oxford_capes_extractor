@@ -8,6 +8,7 @@ import educationalassociation
 import program
 import course
 import csv
+from openpyxl import Workbook
 
 def writetofile(evarea, a, association, program, c):
     filename = "{}_{}.csv".format(FILTER_AREA.lower(), FILTER_EVALUATIONAREA.lower())
@@ -30,7 +31,27 @@ def writeheader():
                         "Cursos", "Código do curso", "Nível", "Área básica",
                         "Logradouro", "Bairro", "Cidade/UF", "Cep", "Caixa postal",
                         "Telefone", "E-mail", "URL"])
-    
+
+
+def writetofile_excel(evarea, a, association, program, c, ws):
+    ws.append([evarea.name.strip(), "CIÊNCIAS DA SAÚDE",
+                     a.name.strip(), c.intituition.strip(), None, program.name.strip(),
+                     c.name.strip(), c.code.strip(), c.level.strip(),
+                     a.name.strip(), c.logradouro.strip(), c.bairro.strip(),
+                     c.city.strip(), c.zipcode.strip(), c.caixapostal.strip(),
+                     c.phone.strip(), c.email.strip(), c.url.strip()])
+
+def writeheader_excel(ws):                                     
+    ws.append(["Área de avaliação", "Grande área",
+              "Área", "IES", "Dependência administrativa", "Programa",
+              "Cursos", "Código do curso", "Nível", "Área básica",
+                        "Logradouro", "Bairro", "Cidade/UF", "Cep", "Caixa postal",
+                        "Telefone", "E-mail", "URL"])   
+
+def save_excel(wb):
+    filename= "{}_{}.xlsx".format(FILTER_AREA.lower(),
+                                  FILTER_EVALUATIONAREA.lower())
+    wb.save(filename)
 
 if(__name__ == "__main__"):
 
@@ -41,6 +62,11 @@ if(__name__ == "__main__"):
     FILTER_EVALUATIONAREA = sys.argv[1].upper()
     FILTER_AREA = sys.argv[2].upper()
 
+    #excel
+    wb=Workbook(write_only = True)
+    ws=wb.create_sheet()
+
+    writeheader_excel(ws)
     writeheader()
 
     evaluationAreas = evaluationarea.getEvaluationAreas()
@@ -60,4 +86,7 @@ if(__name__ == "__main__"):
 
                     for c in courses:
                         writetofile(evArea, area, assoc, prog, c)
+                        writetofile_excel(evArea, area, assoc, prog, c, ws)
+                    
+    save_excel(wb)
 
