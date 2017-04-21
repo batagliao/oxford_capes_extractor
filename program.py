@@ -16,6 +16,12 @@ def getPrograms(eduAssociation):
     for a in anchors:
         text = a.text
         link = a.get("href")
+
+        #remover o parenteses
+        lastindex = text.rfind('(')
+        if(lastindex > -1):
+            text = text[:lastindex - 1]
+
         p = areaobject.Program()
         p.name = text
         p.link = link

@@ -5,6 +5,15 @@ import areaobject
 BASE_URL = "https://sucupira.capes.gov.br/"
 
 
+def xstr(s):
+    return '' if s is None else str(s)
+
+def removeparenthesis(s):    
+    lastindex = s.rfind('(')
+    if(lastindex > -1) and s[lastindex+1].isdigit():
+        s = s[:lastindex-1]
+    return s
+
 def getCourses(program: areaobject.Program):
    print("\t\t\t Obtendo informações cursos do programa {}".format(program.name))
    page = requests.get(BASE_URL + program.link)
@@ -23,9 +32,7 @@ def getCourses(program: areaobject.Program):
    coursename = course.getchildren()[0].text
    
    #remover o parenteses
-   lastindex = coursename.rfind('(')
-   if(lastindex > -1):
-       coursename = coursename[lastindex-1:]
+   coursename = removeparenthesis(coursename)
 
    coursecodcontainer = course.getnext()
    coursecod = getcontainervalue(coursecodcontainer)
@@ -36,7 +43,8 @@ def getCourses(program: areaobject.Program):
    ies = sections[1].getparent().xpath("//h2")
 
    for ie in ies[:-1]:
-       iename = ie.getchildren()[0].text
+       iename = removeparenthesis(ie.getchildren()[0].text)
+       
 
        #verifica se o nome já foi adicionado
        if(any(rc.name == iename for rc in resultcourses)):
@@ -81,14 +89,16 @@ def getCourses(program: areaobject.Program):
        c.adminDependency = ""
        c.code = coursecod
        c.level = level
-       c.logradouro = logradouro
+       c.logradouro = xstr(logradouro) + " " + \
+           xstr(complemento) + " " + xstr(numero)
+       c.logradouro = c.logradouro.replace('\n', ' ').replace('\r', '')
        c.bairro = bairro
        c.city = municipio
-       c.zipcode: cep
+       c.zipcode = cep
        c.caixapostal = ""
-       c.phone = "" if tel is None else tel.strip()
-       c.email =  "" if emailprogram is None else emailprogram.strip()
-       c.url = "" if url is None else url.strip()
+       c.phone = xstr(tel)
+       c.email =  xstr(email)
+       c.url = xstr(url)
        resultcourses.append(c)
 
    return resultcourses
@@ -97,6 +107,11 @@ def getcontainervalue(container):
     valcontainer = container.getchildren()[1]
     children = valcontainer.getchildren()
     if(len(children) > 0):
-        return children[0].text
+        if(children[0]).tag == "a":
+            return children[0].get("href")
+        elif (children[0].tag == "table"):
+            return children[0].xpath(".//td")[0].text_content()
+        else:
+            return children[0].text
     else:
-        return ""
+        return valcontainer.text
