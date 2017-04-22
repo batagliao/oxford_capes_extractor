@@ -89,8 +89,7 @@ def getCourses(program: areaobject.Program):
        c.adminDependency = ""
        c.code = coursecod
        c.level = level
-       c.logradouro = xstr(logradouro) + " " + \
-           xstr(complemento) + " " + xstr(numero)
+       c.logradouro = xstr(logradouro) + " " + xstr(numero) +  " " + xstr(complemento)
        c.logradouro = c.logradouro.replace('\n', ' ').replace('\r', '')
        c.bairro = xstr(bairro)
        c.city = xstr(municipio)
